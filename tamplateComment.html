@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>tamplate comment style</title>
+
+<!-- Font Awesome for beautiful icons -->
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+/>
+
+<style>
+body{
+  margin:0;
+  font-family:Arial, Helvetica, sans-serif;
+  background: radial-gradient(circle at right, #1c0f2e, #05050a);
+  color:white;
+}
+
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:15px 40px;
+  border-bottom:1px solid rgba(255,255,255,0.1);
+}
+
+.logo{
+  font-size:22px;
+  font-weight:bold;
+}
+
+nav a{
+  margin:0 15px;
+  text-decoration:none;
+  color:#ddd;
+}
+
+.container{
+  display:flex;
+  height:calc(100vh - 70px);
+}
+
+.sidebar{
+  width:300px;
+  border-right:1px solid rgba(255,255,255,0.1);
+  padding:20px;
+}
+
+.sidebar input, .sidebar textarea{
+  width:100%;
+  padding:10px;
+  margin-top:10px;
+  border-radius:6px;
+  border:none;
+}
+
+.sidebar textarea{
+  height:80px;
+}
+
+.preview{
+  flex:1;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.comment-box{
+  background:#fff;
+  color:#000;
+  width:420px;
+  border-radius:10px;
+  padding:16px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.4);
+}
+
+.comment-row{
+  display:flex;
+  gap:12px;
+}
+
+.profile{
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  object-fit:cover;
+  background:#ccc;
+}
+
+.comment-content{
+  flex:1;
+}
+
+.comment-header{
+  font-weight:bold;
+  font-size:14px;
+}
+
+.time{
+  color:#666;
+  font-weight:normal;
+  margin-left:6px;
+}
+
+.comment-text{
+  margin:6px 0 10px 0;
+  font-size:15px;
+}
+
+.buttons{
+  display:flex;
+  gap:18px;
+  font-size:16px;
+  color:#333;
+}
+
+.buttons span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.buttons span:hover {
+  color: #007bff;
+}
+
+.reply{
+  margin-left:50px;
+  font-size:14px;
+  margin-top:4px;
+  padding:4px 6px;
+  background:#f0f0f0;
+  border-radius:6px;
+}
+
+.export{
+  margin-top:20px;
+  padding:10px;
+  width:100%;
+  background:#fff;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<div class="logo">Tamplate Comment</div>
+<nav>
+<a href="#">Home</a>
+<a href="#">Pricing</a>
+<a href="#">Use Cases</a>
+<a href="#">Feature Requests</a>
+</nav>
+</header>
+
+<div class="container">
+
+<div class="sidebar">
+
+<label>Profile Image</label>
+<input type="file" id="profileInput" accept="image/*" onchange="loadProfile(event)">
+
+<label>Username</label>
+<input id="username" placeholder="Username" />
+
+<label>Comment</label>
+<textarea id="comment">Write any comment and see what happens 😊</textarea>
+
+<button class="export" onclick="updateComment()">Update Preview</button>
+
+<button class="export" onclick="downloadComment()">Download JPG</button>
+
+</div>
+
+<div class="preview">
+
+<div class="comment-box">
+
+<div class="comment-row">
+<img id="profilePreview" class="profile" src="https://i.pravatar.cc/100" />
+
+<div class="comment-content">
+
+<div class="comment-header">
+<span id="previewName">Username</span>
+<span class="time">• 5 days ago</span>
+</div>
+
+<div class="comment-text" id="previewComment">
+Write any comment and see what happens 😊
+</div>
+
+<div class="buttons">
+  <span><i class="fa-solid fa-thumbs-up"></i> 1.75K</span>
+  <span><i class="fa-solid fa-thumbs-down"></i></span>
+  <span><i class="fa-regular fa-comment"></i> </span>
+</div>
+
+<div style="margin-top:6px;">
+<div id="replyToggle" style="color:#555;font-size:14px;cursor:pointer;" onclick="toggleReplies()">32 replies ▸</div>
+</div>
+
+<div id="replies" style="margin-top:8px; display:none;"></div>
+
+</div>
+</div>
+</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+function updateComment(){
+  const name = document.getElementById('username').value || 'Username';
+  const comment = document.getElementById('comment').value;
+  document.getElementById('previewName').innerText = name;
+  document.getElementById('previewComment').innerText = comment;
+}
+
+function loadProfile(event){
+  const file = event.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e){
+    document.getElementById('profilePreview').src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function toggleReplies(){
+  const box = document.getElementById('replies');
+  const btn = document.getElementById('replyToggle');
+  if(box.style.display === 'none'){
+    box.style.display = 'block';
+    btn.innerText = box.children.length + ' replies ▾';
+  } else {
+    box.style.display = 'none';
+    btn.innerText = box.children.length + ' replies ▸';
+  }
+}
+
+function addReply(){
+  const text = document.getElementById('replyInput').value;
+  if(!text) return;
+
+  const div = document.createElement('div');
+  div.className = 'reply';
+  div.innerText = 'ReplyUser: ' + text;
+
+  document.getElementById('replies').appendChild(div);
+
+  document.getElementById('replyInput').value = '';
+  toggleReplies(); // auto show replies after adding
+}
+
+function downloadComment(){
+  const box = document.querySelector('.comment-box');
+  html2canvas(box).then(canvas => {
+    const link = document.createElement('a');
+    link.download = 'comment.jpg';
+    link.href = canvas.toDataURL('image/jpeg',0.95);
+    link.click();
+  });
+}
+
+function saveComment(){
+  const name = document.getElementById('previewName').innerText;
+  const comment = document.getElementById('previewComment').innerText;
+  const profile = document.getElementById('profilePreview').src;
+
+  const data = {name, comment, profile};
+  localStorage.setItem('savedComment', JSON.stringify(data));
+
+  alert('Comment saved successfully!');
+}
+</script>
+
+</body>
+</html>
